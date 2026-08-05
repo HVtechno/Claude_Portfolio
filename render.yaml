@@ -1,0 +1,36 @@
+# Render Blueprint for the Hari portfolio (Next.js 14, server-rendered).
+# It has API routes (/api/chat, /api/tailor), so it runs as a Node web service.
+# In Render: New -> Blueprint -> point at this repo. Set the sync:false vars in the dashboard.
+
+services:
+  - type: web
+    name: hari-portfolio
+    runtime: node
+    plan: starter
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+
+      # VeXa's AI brain — required for real conversation (falls back to scripted lines if unset)
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_CHAT_MODEL
+        value: gpt-4o-mini
+
+      # Resuviq backend — the real tailored-resume engine for the Hire flow.
+      # Leave unset to fall back to LLM text tailoring.
+      - key: RESUVIQ_API_URL
+        sync: false
+      - key: RESUVIQ_EMAIL
+        sync: false
+      - key: RESUVIQ_PASSWORD
+        sync: false
+      - key: RESUVIQ_RESUME_ID
+        sync: false
