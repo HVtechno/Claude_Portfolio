@@ -11,7 +11,7 @@ export const metadata: Metadata = {
       "A portfolio built as a living system. Explore the architecture.",
     type: "website",
   },
-  metadataBase: new URL("https://h2ganesh.onrender.com"),
+  metadataBase: new URL("https://h2ganesh.com"),
 };
 
 export default function RootLayout({
