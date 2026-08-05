@@ -233,7 +233,7 @@ export default function VirtualHari({
       const reply = String(data.reply)
         .replace(/\[\[\s*open\s*:\s*[a-zA-Z]+\s*\]\]/gi, "")
         .trim();
-      msgsRef.current = [...history, { role: "assistant", content: reply }].slice(-10);
+      msgsRef.current = [...history, { role: "assistant" as const, content: reply }].slice(-10);
       setThinking(false);
       if (hire) {
         setResumeText(reply);
