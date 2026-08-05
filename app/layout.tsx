@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Hari — Systems Architect & Data Engineer",
+  title: "◉ Hari · system online",
   description:
     "A portfolio built as a living system. Data engineering, distributed architecture, and technical leadership — explored as an interactive architecture graph.",
   openGraph: {
-    title: "Hari — Systems Architect & Data Engineer",
+    title: "◉ Hari · system online",
     description:
       "A portfolio built as a living system. Explore the architecture.",
     type: "website",
   },
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://h2ganesh.onrender.com"),
 };
 
 export default function RootLayout({

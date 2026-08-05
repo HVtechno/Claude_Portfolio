@@ -12,7 +12,7 @@ import ArchitectureExplorer from "@/components/ArchitectureExplorer";
 import FeaturedWork from "@/components/FeaturedWork";
 import VirtualHari from "@/components/VirtualHari";
 
-const HEADING = "WELCOME TO HARI'S WORLD";
+const HEADING = "SYSTEM ONLINE";
 
 export default function SystemScene() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ export default function SystemScene() {
     o.frequency.value = freq;
     const t = ac.currentTime;
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.04, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.09, t + 0.005);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
     o.connect(g).connect(ac.destination);
     o.start(t);
@@ -409,14 +409,14 @@ export default function SystemScene() {
               {soundOn ? "sound: on" : "sound: off"}
             </button>
             <div className="type-wrap">
-              <div className="type-k">// system online</div>
+              <div className="type-k">// initializing</div>
               <h1 className="type-h">
                 {typed}
                 <span className="caret">▌</span>
               </h1>
               <div className={phase === "done" ? "reveal show" : "reveal"}>
                 <p className="tg">
-                  A portfolio built as a living system — step inside and explore.
+                  Hari at the core — every node a part of what he builds.
                 </p>
                 <div className="entering">entering the system…</div>
               </div>

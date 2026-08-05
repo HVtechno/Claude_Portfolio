@@ -342,7 +342,7 @@ export default function VirtualHari({
     if (offer) speak(`Looks like you opened ${offer.talk}. Want me to tell you about it?`);
     else
       speak(
-        "Hi — I'm VeXa, Hari's personal assistant. It's my pleasure to show you what he can build and everything he's picked up along the way. Ask me anything, or pick a topic — you can type or talk to me."
+        "You're inside Hari's system now — every node around you is a piece of who he is and what he builds. I'm VeXa, and I keep it running. Point me anywhere: tap a node, or just tell me what you're curious about and I'll route you straight to it."
       );
   };
 
@@ -410,6 +410,10 @@ export default function VirtualHari({
       rec.onend = () => setMicLive(false);
       recRef.current = rec;
     }
+    // stop VeXa talking (and any tour) so it listens to you cleanly
+    touringRef.current = false;
+    tok.current++;
+    stopSpeech();
     try {
       recRef.current.start();
       setMicLive(true);
