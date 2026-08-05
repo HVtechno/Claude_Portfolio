@@ -258,11 +258,11 @@ export const NODES: SystemNode[] = [
 // Portrait / mobile layout — core at top, satellites as a fan below,
 // so the "orchestrated from one core" metaphor still reads on a phone.
 export const MOBILE_POS: Record<string, { x: number; y: number }> = {
-  core: { x: 0.5, y: 0.14 },
-  arch: { x: 0.27, y: 0.31 },
-  stack: { x: 0.73, y: 0.31 },
-  lead: { x: 0.27, y: 0.46 },
-  work: { x: 0.73, y: 0.46 },
-  about: { x: 0.27, y: 0.61 },
-  contact: { x: 0.73, y: 0.61 },
+  core: { x: 0.5, y: 0.21 },
+  arch: { x: 0.27, y: 0.4 },
+  stack: { x: 0.73, y: 0.4 },
+  lead: { x: 0.27, y: 0.57 },
+  work: { x: 0.73, y: 0.57 },
+  about: { x: 0.27, y: 0.74 },
+  contact: { x: 0.73, y: 0.74 },
 };
