@@ -177,7 +177,19 @@ export default function SystemScene() {
     if (startedRef.current) return;
     startedRef.current = true;
     const ac = ensureAudio();
-    if (ac && ac.state === "suspended") ac.resume();
+    if (ac) {
+      if (ac.state === "suspended") ac.resume();
+      // prime iOS audio within the user gesture (helps unlock WebAudio)
+      try {
+        const b = ac.createBuffer(1, 1, 22050);
+        const s = ac.createBufferSource();
+        s.buffer = b;
+        s.connect(ac.destination);
+        s.start(0);
+      } catch {
+        /* noop */
+      }
+    }
     startHum();
     setPhase("typing");
     typeNext(1);

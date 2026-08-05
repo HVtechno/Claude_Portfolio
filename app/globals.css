@@ -904,21 +904,26 @@ a.dchannel-value:hover {
 /* compact the explorer on phones */
 @media (max-width: 719px) {
   .archx-head {
-    padding: 22px 20px 0;
+    padding: 14px 18px 0;
   }
   .archx-head h2 {
-    font-size: 26px;
+    font-size: 22px;
   }
-  .archx-lead {
-    font-size: 15px;
+  .archx-eyebrow {
+    font-size: 9px;
+  }
+  /* reclaim vertical space for the diagram on phones */
+  .archx-lead,
+  .archx-cert {
+    display: none;
   }
   .archx-tabs {
-    margin-top: 12px;
-    margin-bottom: 20px;
+    margin-top: 8px;
+    margin-bottom: 10px;
   }
   .archx-node {
-    max-width: 98px;
-    padding: 7px 9px;
+    max-width: 92px;
+    padding: 6px 8px;
     border-radius: 10px;
   }
   .archx-node .nlabel {

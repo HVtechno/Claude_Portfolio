@@ -198,7 +198,7 @@ const documentSystem: ArchDiagram = {
       x: 13,
       y: 56,
       mx: 27,
-      my: 15,
+      my: 17,
       desc:
         "Serverless ingestion — Azure Functions on HTTP, timer and blob triggers run Python / Pandas (and Tesseract OCR) to extract every source and land it straight into Azure SQL.",
       tech: ["Azure Functions", "Python", "Pandas", "Tesseract OCR"],
@@ -210,7 +210,7 @@ const documentSystem: ArchDiagram = {
       x: 26,
       y: 56,
       mx: 73,
-      my: 15,
+      my: 17,
       desc:
         "One trusted store — raw data lands here and is transformed in place, keeping business logic close to the data.",
       tech: ["Azure SQL"],
@@ -222,7 +222,7 @@ const documentSystem: ArchDiagram = {
       x: 39,
       y: 56,
       mx: 50,
-      my: 25,
+      my: 29,
       desc:
         "In-warehouse modeling with SQL — stored procedures and views turn raw records into clean, query-ready data.",
       tech: ["SQL", "Stored Procedures", "Views"],
@@ -234,7 +234,7 @@ const documentSystem: ArchDiagram = {
       x: 26,
       y: 80,
       mx: 50,
-      my: 35,
+      my: 42,
       desc:
         "Every run writes live logs to SQL; a custom Flask dashboard surfaces audit trails in real time to track runs, catch errors fast and troubleshoot.",
       tech: ["Flask", "Live Logs", "Audit Trail"],
@@ -247,7 +247,7 @@ const documentSystem: ArchDiagram = {
       x: 60,
       y: 42,
       mx: 27,
-      my: 53,
+      my: 57,
       desc:
         "Python Azure Functions expose HTTP GET / POST endpoints that call stored procedures and stream transformed data to the app.",
       tech: ["Azure Functions", "HTTP GET / POST", "Stored Procedures"],
@@ -259,7 +259,7 @@ const documentSystem: ArchDiagram = {
       x: 60,
       y: 62,
       mx: 73,
-      my: 53,
+      my: 57,
       desc:
         "Feature-specific endpoints behind the UI — powering CRUD writes, per-user bookmarks and on-demand invoice generation.",
       tech: ["Azure Functions", "REST", "CRUD"],
@@ -272,7 +272,7 @@ const documentSystem: ArchDiagram = {
       x: 84,
       y: 32,
       mx: 50,
-      my: 70,
+      my: 71,
       desc:
         "A React single-page app — component-driven with React Router — that the operations team works in all day.",
       tech: ["React.js", "React Router", "Components"],
