@@ -111,6 +111,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
 .grid {
@@ -326,6 +327,13 @@ body {
   opacity: 0;
   pointer-events: none;
   transform: scale(1.08);
+}
+/* the faded-out intro must not keep catching taps — its centered .reveal block
+   (pointer-events: auto) otherwise sits invisibly over the middle-row nodes */
+.enter.gone .reveal,
+.enter.gone .reveal.show,
+.enter.gone .btn {
+  pointer-events: none;
 }
 .enter .k {
   font-family: var(--mono);
