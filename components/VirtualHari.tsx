@@ -106,6 +106,7 @@ export default function VirtualHari({
   const [resumeText, setResumeText] = useState<string | null>(null);
   const [resumePdf, setResumePdf] = useState<string | null>(null);
   const [resumeSummary, setResumeSummary] = useState<any>(null);
+  const [cvCard, setCvCard] = useState(false);
 
   const tok = useRef(0);
   const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
@@ -206,12 +207,18 @@ export default function VirtualHari({
     const q = text.trim();
     if (!q) return;
     const { fallback, hire } = opts;
+    // "can I see his CV / resume?" -> hand over the /cv page directly
+    if (!hire && /\b(cv|resume|résumé|curriculum)\b/i.test(q)) {
+      showCv(q);
+      return;
+    }
     const myTok = ++tok.current;
     stopSpeech(); // cut any current narration instantly
     setOffer(null);
     setResumeText(null);
     setResumePdf(null);
     setResumeSummary(null);
+    setCvCard(false);
     touringRef.current = false;
     setLastUser(q);
     setInput("");
@@ -258,6 +265,22 @@ export default function VirtualHari({
     }
   };
 
+  // show the full-CV card (the public /cv page)
+  const showCv = (q?: string) => {
+    touringRef.current = false;
+    setHireMode(false);
+    setOffer(null);
+    setResumeText(null);
+    setResumePdf(null);
+    setResumeSummary(null);
+    setLastUser(q || "Can I see his full CV?");
+    setInput("");
+    setCvCard(true);
+    speak(
+      "Of course — here's Hari's complete CV on one clean page. You can print it, save it as a PDF, or send the link straight to your hiring manager."
+    );
+  };
+
   const downloadResume = () => {
     if (!resumeText) return;
     const blob = new Blob([resumeText], { type: "text/plain;charset=utf-8" });
@@ -294,6 +317,7 @@ export default function VirtualHari({
     setResumeText(null);
     setResumePdf(null);
     setResumeSummary(null);
+    setCvCard(false);
     touringRef.current = false;
     setLastUser(q);
     setInput("");
@@ -327,6 +351,7 @@ export default function VirtualHari({
     setResumeText(null);
     setResumePdf(null);
     setResumeSummary(null);
+    setCvCard(false);
     setHireMode(true);
     setLastUser("");
     speak(
@@ -357,6 +382,7 @@ export default function VirtualHari({
     setResumeText(null);
     setResumePdf(null);
     setResumeSummary(null);
+    setCvCard(false);
     setOpen(false);
   };
 
@@ -373,6 +399,7 @@ export default function VirtualHari({
     setResumeText(null);
     setResumePdf(null);
     setResumeSummary(null);
+    setCvCard(false);
     let i = 0;
     const nextStep = () => {
       if (!touringRef.current) return;
@@ -422,12 +449,8 @@ export default function VirtualHari({
     }
   };
 
-  // pop up + greet once on desktop; on phones start minimized (as the launcher)
-  // so the whole node scene stays tappable — the visitor opens it when ready.
-  useEffect(() => {
-    if (!isMobile) openPanel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // VeXa starts idle (as the launcher) on every device — it only opens and
+  // starts narrating when the visitor clicks it.
 
   // when the visitor opens a section themselves: blink red (until opened) + offer
   useEffect(() => {
@@ -446,7 +469,7 @@ export default function VirtualHari({
   useEffect(() => {
     const el = bodyRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [cap, resumeText, resumePdf, thinking, lastUser]);
+  }, [cap, resumeText, resumePdf, thinking, lastUser, cvCard]);
 
   const hasSR =
     typeof window !== "undefined" &&
@@ -506,6 +529,19 @@ export default function VirtualHari({
         )}
       </div>
 
+      {cvCard && (
+        <div className="vh-cvcard">
+          <span className="vh-cvcard-pg" />
+          <div>
+            <div className="vh-cvcard-t">Hari — full CV</div>
+            <div className="vh-cvcard-s">printable · shareable link</div>
+          </div>
+          <a href="/cv" target="_blank" rel="noreferrer">
+            Open ↗
+          </a>
+        </div>
+      )}
+
       {resumeText && (
         <div className="vh-resume">
           <div className="vh-resume-head">
@@ -562,6 +598,9 @@ export default function VirtualHari({
             {tp.label}
           </button>
         ))}
+        <button className="vh-opt" onClick={() => showCv()}>
+          📄 Full CV
+        </button>
         <button className="vh-opt hire" onClick={startHire}>
           🤝 Hire / work with Hari
         </button>

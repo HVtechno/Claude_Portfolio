@@ -115,6 +115,28 @@ Notes:
 
 ---
 
+## The CV page (`/cv`) and the private editor (`/cv/edit`)
+
+- **`/cv`** — a clean, printable, paper-style CV anyone can open and share. Read-only.
+  Linked from the "CV" button in the top bar and from VeXa ("📄 Full CV").
+- **`/cv/edit`** — Hari's private editor. Not linked anywhere, not indexed, and locked by
+  a password (`CV_ADMIN_PASSWORD`) that only exists on the server. Click any text on the
+  paper to edit it; add / remove / reorder jobs, bullets, skills, certifications and
+  products. Edits autosave as a private **draft**; **Publish** makes them live on `/cv`
+  instantly (no redeploy). **History** restores any earlier published version.
+- The published CV is also what VeXa's hire flow tailors from.
+
+Setup:
+
+1. Set `CV_ADMIN_PASSWORD` (and optionally `CV_SESSION_SECRET`) in `.env.local` / Render.
+2. Storage — in Supabase run `supabase/cv.sql` once in the SQL editor, then set
+   `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Without them, edits are saved to
+   `.data/cv.json`, which is fine locally but is wiped on every Render deploy.
+3. `data/cv.ts` is only the starting content (and the "Original from resume" entry in
+   History) — after the first Publish, edit the CV in the browser.
+
+---
+
 ## Deployment (Render)
 
 This is a server-rendered Next.js app (it has API routes), so deploy it as a **Node web

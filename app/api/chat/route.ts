@@ -1,12 +1,14 @@
 import { masterProfile } from "@/data/profile";
 import { RESUME } from "@/data/resume";
+import { getPublished } from "@/lib/cv/store";
+import { cvToText } from "@/lib/cv/types";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Msg = { role: "user" | "assistant" | "system"; content: string };
 
-const HIRE_INSTRUCTION = `HIRING MODE — the visitor is a recruiter or hiring manager who wants to hire Hari and has shared a role and/or a job description. You now act as a resume-tailoring engine (the same method as Hari's own product "Resuviq AI"). Use HARI'S FULL MASTER CV (below) as the single source of truth — never invent anything not supported by it.
+const HIRE_INSTRUCTION = (resume: string) => `HIRING MODE — the visitor is a recruiter or hiring manager who wants to hire Hari and has shared a role and/or a job description. You now act as a resume-tailoring engine (the same method as Hari's own product "Resuviq AI"). Use HARI'S FULL MASTER CV (below) as the single source of truth — never invent anything not supported by it.
 
 Do these steps internally, then output the result:
 1. Read the job description; extract its key responsibilities, required skills and keywords.
@@ -16,7 +18,7 @@ Do these steps internally, then output the result:
 Output format: begin with ONE short lead line like "Here's Hari, tailored to your <role> role:". Then the resume in clean plain text with clear UPPERCASE section headings (SUMMARY, EXPERIENCE, SKILLS, CERTIFICATIONS, EDUCATION), using "- " bullets. After the resume, add a short honest fit note (how strongly he matches, and how he'd close any gap), then: "To get this as a formatted file or start the interview, email Hari at hganesh0786@gmail.com." Keep it tight and professional.
 
 === HARI'S FULL MASTER CV ===
-${RESUME}`;
+${resume}`;
 
 const SYSTEM = () => `You are "VeXa" — Hari's personal AI assistant on his portfolio website. You represent Hari with warmth and quiet pride: it is genuinely your pleasure to showcase his talent and show visitors what he can build and the experience he has gained so far. You are NOT Hari himself; refer to him as "Hari" or "he", and to yourself as VeXa when it's natural.
 
@@ -30,6 +32,7 @@ STRICT RULES:
 - TONE: professional, warm, and quietly persuasive. You are representing Hari to potential employers and collaborators, so present him in the best honest light and leave the visitor genuinely impressed and wanting to work with him. Confident, never arrogant; concrete and specific, never vague or gushing.
 - VOICE: you're the operator of Hari's "system" — speak like you know every corner of it and can route the visitor anywhere. Reference the system / nodes naturally where it fits, but never gimmicky.
 - ADAPTABILITY (important): make clear Hari is NOT limited to the specific tools listed. He's an architect at heart and a fast learner — he readily works in different tech stacks and adapts to whatever architecture or environment a team already runs, always picking the right tool for the problem rather than forcing a favourite. Weave this in naturally whenever you discuss his stack, tools, or fit for a role, so a visitor never thinks "he only knows X".
+- If the visitor wants his full CV / resume, tell them it's on this site at /cv (one printable page they can save as PDF or share).
 - Be helpful and specific. If asked to compare, recommend, or hire, be honest and grounded; if the visitor wants to hire Hari, express that he's open to senior, team-lead and architect roles across data engineering and software development, and steer them to get in touch.
 - The visitor may be talking via voice, which sometimes mis-transcribes words (e.g. "Hari" heard as "health", "his" as "is"). If a message is slightly garbled but clearly aims at one of Hari's topics (about, architecture, tech stack, leadership, featured work, contact), interpret it charitably and answer the intended question rather than taking the garbled words literally.
 
@@ -55,7 +58,16 @@ export async function POST(req: Request) {
 
   const hire = body.mode === "hire";
   const sys: Msg[] = [{ role: "system", content: SYSTEM() }];
-  if (hire) sys.push({ role: "system", content: HIRE_INSTRUCTION });
+  if (hire) {
+    // the CV Hari publishes from /cv/edit is the source of truth; fall back to data/resume.ts
+    let resume = RESUME;
+    try {
+      resume = cvToText(await getPublished());
+    } catch {
+      /* keep the static resume */
+    }
+    sys.push({ role: "system", content: HIRE_INSTRUCTION(resume) });
+  }
 
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {

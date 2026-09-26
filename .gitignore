@@ -26,3 +26,6 @@ yarn-error.log*
 # typescript
 next-env.d.ts
 *.tsbuildinfo
+
+# private CV editor storage (local fallback)
+/.data/

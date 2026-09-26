@@ -96,22 +96,6 @@ export default function SystemScene() {
     return acRef.current;
   };
 
-  const blip = (freq: number) => {
-    const ac = acRef.current;
-    if (!ac || !soundOnRef.current) return;
-    const o = ac.createOscillator();
-    const g = ac.createGain();
-    o.type = "square";
-    o.frequency.value = freq;
-    const t = ac.currentTime;
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.09, t + 0.005);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
-    o.connect(g).connect(ac.destination);
-    o.start(t);
-    o.stop(t + 0.07);
-  };
-
   const chime = () => {
     const ac = acRef.current;
     if (!ac || !soundOnRef.current) return;
@@ -155,8 +139,7 @@ export default function SystemScene() {
   // -------- typewriter --------
   const typeNext = (i: number) => {
     setTyped(HEADING.slice(0, i));
-    const ch = HEADING[i - 1];
-    if (ch && ch !== " ") blip(1150 + Math.random() * 550);
+    // (no per-character keyboard blip — typing is silent by design)
     if (i >= HEADING.length) {
       window.setTimeout(() => {
         setPhase("done");
@@ -341,6 +324,10 @@ export default function SystemScene() {
               ))}
             </div>
           </div>
+          <a className="cvlink" href="/cv" aria-label="Open Hari's full CV">
+            <span className="cvlink-doc" />
+            CV
+          </a>
         </div>
       </div>
 

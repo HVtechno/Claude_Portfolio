@@ -9,7 +9,7 @@ hganesh0786@gmail.com | +31 6 39262121 | Alphen aan den Rijn, Netherlands
 LinkedIn: linkedin.com/in/harihara-subramanian-ganesh-57ba71166 | GitHub: github.com/hvtechno
 
 PROFESSIONAL SUMMARY
-Aspiring Solution Architect / Data Architect / Data Team Lead with 10+ years of experience across software development, DevOps, DataOps, business intelligence and automation. Microsoft Azure certified (Security, Data Engineering, Development, Data Fundamentals), strong in Azure DevOps and Agile. Expert in designing, deploying and optimizing complex data and software architectures; drives innovation and growth through technical depth, strategic thinking and leadership.
+Aspiring Solution Architect / Data Architect / Data Team Lead with 10+ years of experience across software development, DevOps, DataOps, business intelligence and automation. Six-times Microsoft Azure certified (Solutions Architect Expert, Administrator, Security, Data Engineering, Development, Data Fundamentals), strong in Azure DevOps and Agile. Expert in designing, deploying and optimizing complex data and software architectures; drives innovation and growth through technical depth, strategic thinking and leadership.
 
 PROFESSIONAL EXPERIENCE
 
@@ -26,7 +26,7 @@ Senior Python Data Engineer — Ebicus B.V (Jan 2025 – Sep 2025)
 - Implemented Azure Functions to streamline ETL, reducing processing costs by 25% and increasing throughput by 40%.
 - Engineered a web-based ETL monitoring tool, improving data-quality enforcement with 40% faster performance reports.
 
-Senior Azure Data Engineer — Dynamic People B.V (Jul 2024 – Present)
+Senior Azure Data Engineer — Dynamic People B.V (Jul 2024 – Dec 2024)
 - Optimized ingestion/transformation with Azure Synapse, Databricks and PySpark; integrated 10+ sources and improved Power BI refresh efficiency by 30%.
 - Led a team of two junior engineers building/maintaining CI/CD pipelines in Azure DevOps for Synapse and Databricks.
 - Enhanced pipeline reliability for financial reporting, reducing manual effort by 60% and improving efficiency up to 40%.
@@ -67,6 +67,8 @@ Master of Science — VSB Technical University (2017 – 2020)
 Bachelor of Technology — Crescent Engineering College (2011 – 2015)
 
 CERTIFICATIONS
+- Microsoft Certified: Azure Solutions Architect Expert (Aug 2025)
+- Microsoft Certified: Azure Administrator Associate (Aug 2025)
 - Microsoft Certified: Azure Security Engineer Associate (Aug 2024)
 - Microsoft Certified: Azure Data Engineer Associate, DP-203 (Jul 2023)
 - Microsoft Certified: Azure Developer Associate (Feb 2023)

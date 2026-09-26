@@ -34,3 +34,13 @@ services:
         sync: false
       - key: RESUVIQ_RESUME_ID
         sync: false
+
+      # Private CV editor (/cv/edit) — owner password + storage for the live CV
+      - key: CV_ADMIN_PASSWORD
+        sync: false
+      - key: CV_SESSION_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
