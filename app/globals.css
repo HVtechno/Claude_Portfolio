@@ -330,10 +330,14 @@ body {
 }
 /* the faded-out intro must not keep catching taps — its centered .reveal block
    (pointer-events: auto) otherwise sits invisibly over the middle-row nodes */
-.enter.gone .reveal,
-.enter.gone .reveal.show,
-.enter.gone .btn {
-  pointer-events: none;
+.enter.gone,
+.enter.gone * {
+  pointer-events: none !important;
+}
+/* the "sound: on/off" toggle sits top-right — exactly over the CV button — so
+   once the intro is gone it must disappear completely, not just fade */
+.enter.gone .sound-toggle {
+  visibility: hidden;
 }
 .enter .k {
   font-family: var(--mono);
