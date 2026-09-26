@@ -115,7 +115,7 @@ export default function FeaturedWork({
             ))}
           </div>
 
-          {(p.live || p.reachOut) && (
+          {(p.live || p.repo || p.reachOut) && (
             <div className="fw-actions">
               {p.live && (
                 <a
@@ -125,6 +125,16 @@ export default function FeaturedWork({
                   rel="noreferrer"
                 >
                   Live ↗
+                </a>
+              )}
+              {p.repo && (
+                <a
+                  className="fw-link"
+                  href={p.repo}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  GitHub ↗
                 </a>
               )}
               {p.reachOut && (
@@ -139,7 +149,9 @@ export default function FeaturedWork({
               )}
             </div>
           )}
-          {p.reachOut && <p className="fw-note">{CONTACT.line}</p>}
+          {/* "Like the live demo? … happy to share the code" only makes sense for a
+              live product whose code isn't public — hide it when there's a repo link */}
+          {p.reachOut && p.live && !p.repo && <p className="fw-note">{CONTACT.line}</p>}
         </div>
 
         {!isMobile && count > 1 && (

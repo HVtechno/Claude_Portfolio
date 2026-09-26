@@ -51,7 +51,7 @@ const TOPICS: Record<string, Topic> = {
     label: "Featured Work",
     talk: "his featured work",
     prompt: "Tell me about Hari's featured products.",
-    say: "He builds for the love of it — Resuviq, an A I resume optimizer on live jobs, and Foliq, a research library that answers across all your papers with citations.",
+    say: "He builds for the love of it — Resuviq, an A I resume optimizer on live jobs; Foliq, a research library that answers across all your papers with citations; and Mantra Sangraha, an offline book of mantras that builds itself from public sources.",
   },
   contact: {
     key: "contact",

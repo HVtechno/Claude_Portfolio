@@ -172,7 +172,7 @@ export const NODES: SystemNode[] = [
     body:
       "A curated set of systems I've designed and delivered — each told as problem, architecture, and measurable outcome. The proof behind the components.",
     metrics: [
-      { value: "6", label: "case studies" },
+      { value: "3", label: "products built" },
       { value: "end-to-end", label: "ownership" },
     ],
     chips: ["Case Studies", "Diagrams", "Outcomes"],

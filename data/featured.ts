@@ -84,7 +84,34 @@ export const FEATURED: FeaturedProduct[] = [
       "Polar",
       "PWA",
     ],
-    live: "https://foliqai.onrender.com",
+    repo: "https://github.com/HVtechno/MLDocuChat",
+    reachOut: true,
+  },
+  {
+    id: "mantra-sangraha",
+    name: "Mantra Sangraha",
+    tagline: "An ad-free, offline book of Hindu mantras — built on demand from public-domain sources",
+    badge: "full-stack PWA",
+    problem:
+      "Finding a clean, correctly spelled mantra usually means ad-heavy websites, apps that bundle copyrighted translations, or text in the wrong script — and the elders in my family found typing and searching hard. I wanted a personal book that builds itself on demand, reads offline, respects copyright, and is easy for anyone to use.",
+    flow: ["Search / speak", "Resolve aliases", "Fetch sources", "Parse verses", "Read offline"],
+    outcome:
+      "Search a mantra by name, by deity or by voice, and a server-side pipeline resolves spellings and aliases, pulls the clean text through a chain of source adapters (Vaidika Vignanam → sanskritdocuments → Wikisource → web search), parses it into numbered verses in any of 9 Indic scripts, and caches the result. Each reader's book lives on their own device and reads offline in a 3D flip-book with a table of contents, sourced meanings, and recitation audio whose lines light up as they're chanted — aligned entirely in the browser. The UI speaks 7 languages, installs as a PWA and ships as an Android app (TWA), with an unlinked admin dashboard for feedback and a pre-built audio index that took live search out of the request path.",
+    metrics: [
+      { value: "85", label: "mantras in the catalog" },
+      { value: "9 scripts", label: "7 UI languages" },
+    ],
+    tech: [
+      "Next.js 14",
+      "React",
+      "Node.js API routes",
+      "Source adapters + parsing",
+      "Web Audio API",
+      "PWA · Service Worker",
+      "Android TWA",
+      "Upstash Redis",
+    ],
+    repo: "https://github.com/HVtechno/mantra_sangraha",
     reachOut: true,
   },
 ];
