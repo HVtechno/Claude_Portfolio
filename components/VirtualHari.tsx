@@ -17,6 +17,10 @@ type Topic = {
 
 type Msg = { role: "user" | "assistant"; content: string };
 
+// the requirement-match % is only shown to recruiters when it's strong;
+// below this, VeXa shows the matched requirements + fit note without a number
+const SHOW_MATCH_PCT_FROM = 70;
+
 const TOPICS: Record<string, Topic> = {
   about: {
     key: "about",
@@ -105,7 +109,16 @@ export default function VirtualHari({
   const [hireMode, setHireMode] = useState(false);
   const [resumeText, setResumeText] = useState<string | null>(null);
   const [resumePdf, setResumePdf] = useState<string | null>(null);
-  const [resumeSummary, setResumeSummary] = useState<any>(null);
+  const [resumeSummary, setResumeSummary] = useState<{
+    role?: string;
+    total?: number;
+    matched?: string[];
+    related?: string[];
+    missing?: string[];
+    coverage?: number;
+    fitNote?: string;
+    fileName?: string;
+  } | null>(null);
   const [cvCard, setCvCard] = useState(false);
 
   const tok = useRef(0);
@@ -150,15 +163,46 @@ export default function VirtualHari({
     setSpeaking(false);
   };
 
-  const typeCap = (text: string, myTok: number) => {
+  // ---- captions that follow the voice ----
+  // Two signals keep typing and speech in step:
+  //  1. word "boundary" events from the speech engine (when the browser/voice
+  //     sends them) — captions never run more than ~a word ahead, and catch up
+  //     if they fall behind;
+  //  2. a speaking-speed estimate (chars/sec + natural pauses at punctuation),
+  //     re-calibrated after every sentence she speaks, for voices that send no
+  //     boundary events (e.g. Chrome's online Google voices).
+  const cpsRef = useRef(14); // learned speaking speed, characters per second
+  const boundaryRef = useRef(-1); // end index of the word being spoken now
+
+  const pauseFor = (ch?: string) =>
+    ch === "." || ch === "!" || ch === "?"
+      ? 320
+      : ch === "," || ch === ";" || ch === ":"
+      ? 150
+      : ch === "—"
+      ? 170
+      : 0;
+
+  const typeCap = (text: string, myTok: number, paced: boolean) => {
     let i = 0;
     const step = () => {
       if (myTok !== tok.current) return;
-      if (i <= text.length) {
-        setCap(text.slice(0, i));
-        i++;
-        window.setTimeout(step, 15);
-      } else setCap(text);
+      if (i >= text.length) {
+        setCap(text);
+        return;
+      }
+      const b = boundaryRef.current;
+      if (paced && b >= 0) {
+        if (i < b) i = b; // speech is ahead — catch up to the spoken word
+        if (i > b + 12) {
+          window.setTimeout(step, 40); // captions are ahead — wait for the voice
+          return;
+        }
+      }
+      i++;
+      setCap(text.slice(0, i));
+      const delay = paced ? 1000 / cpsRef.current + pauseFor(text[i - 1]) : 18;
+      window.setTimeout(step, delay);
     };
     step();
   };
@@ -166,8 +210,12 @@ export default function VirtualHari({
   const speak = (text: string, onend?: () => void) => {
     const myTok = ++tok.current;
     setThinking(false);
-    typeCap(text, myTok);
+    setCap("");
+    boundaryRef.current = -1;
+
+    // muted / no speech engine: just type it at a comfortable reading pace
     if (!soundRef.current || !("speechSynthesis" in window)) {
+      typeCap(text, myTok, false);
       window.setTimeout(() => {
         if (myTok === tok.current && onend) onend();
       }, Math.min(6000, text.length * 34));
@@ -179,14 +227,50 @@ export default function VirtualHari({
       /* noop */
     }
     // captions keep the "VeXa" styling; speech says it as a word, not letters
+    // (same length, so boundary char indexes line up with the caption text)
     const u = new SpeechSynthesisUtterance(text.replace(/vexa/gi, "Vexa"));
     if (voiceRef.current) u.voice = voiceRef.current;
     u.rate = 1;
-    u.onstart = () => setSpeaking(true);
-    u.onend = () => {
-      setSpeaking(false);
-      if (myTok === tok.current && onend) onend();
+
+    let started = false;
+    let startedAt = 0;
+    const begin = () => {
+      if (started || myTok !== tok.current) return;
+      started = true;
+      startedAt = performance.now();
+      setSpeaking(true);
+      typeCap(text, myTok, true); // typing starts when the voice starts
     };
+    const finish = () => {
+      setSpeaking(false);
+      if (myTok !== tok.current) return;
+      setCap(text); // make sure the full line is shown
+      // learn this voice's real speed for the next line
+      if (startedAt && text.length > 40) {
+        const pauses = Array.from(text).reduce((sum, ch) => sum + pauseFor(ch), 0);
+        const secs = (performance.now() - startedAt - pauses) / 1000;
+        if (secs > 0.8) {
+          const measured = text.length / secs;
+          cpsRef.current = Math.min(26, Math.max(8, cpsRef.current * 0.5 + measured * 0.5));
+        }
+      }
+      if (onend) onend();
+    };
+
+    u.onstart = begin;
+    u.onboundary = (e: SpeechSynthesisEvent) => {
+      if (myTok !== tok.current) return;
+      begin();
+      let end = e.charIndex + ((e as any).charLength || 0);
+      if (!(e as any).charLength) {
+        const m = /^\S+/.exec(text.slice(e.charIndex));
+        end = e.charIndex + (m ? m[0].length : 0);
+      }
+      boundaryRef.current = Math.max(boundaryRef.current, end);
+    };
+    u.onend = finish;
+    u.onerror = finish;
+
     // small delay lets cancel() flush first (Chrome cancel/speak race),
     // and if a newer action superseded this one, we skip speaking it
     window.setTimeout(() => {
@@ -194,9 +278,11 @@ export default function VirtualHari({
       try {
         window.speechSynthesis.speak(u);
       } catch {
-        /* noop */
+        typeCap(text, myTok, false);
       }
     }, 60);
+    // if the engine never reports "start" (some mobile browsers), type anyway
+    window.setTimeout(begin, 1500);
   };
 
   // --- the real brain: ask the LLM, fall back to the scripted line ---
@@ -301,13 +387,15 @@ export default function VirtualHari({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "Hari-tailored-resume.pdf";
+    a.download = resumeSummary?.fileName || "Hari-CV-tailored.pdf";
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  // run the REAL Resuviq engine on the recruiter's JD; fall back to the LLM
-  // tailoring if Resuviq isn't configured/reachable yet.
+  // tailor Hari's PUBLISHED /cv to the recruiter's JD (server: /api/cv/tailor)
+  // -> a PDF in the same design as /cv + an honest keyword match. Falls back to
+  // the plain-text LLM tailoring if that fails. (The old Resuviq route,
+  // /api/tailor, is kept in the repo but no longer called.)
   const tailor = async (jd: string) => {
     const q = jd.trim();
     if (!q) return;
@@ -324,7 +412,7 @@ export default function VirtualHari({
     setCap("");
     setThinking(true);
     try {
-      const r = await fetch("/api/tailor", {
+      const r = await fetch("/api/cv/tailor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ jd: q }),
@@ -334,9 +422,20 @@ export default function VirtualHari({
       if (myTok !== tok.current) return;
       setThinking(false);
       setResumePdf(d.pdfBase64);
-      setResumeSummary(d.summary || null);
+      const sum = { ...(d.summary || {}), fileName: d.fileName };
+      setResumeSummary(sum);
+      const m = sum.matched?.length ?? 0;
+      const n = sum.total ?? 0;
+      const pct = sum.coverage ?? 0;
+      const role = sum.role ? ` ${sum.role}` : "";
       speak(
-        "Done — I've tailored Hari's resume to your role. Go ahead and download it just below. Honestly, he already brings the essential tech and experience this role needs, and even where a keyword or two doesn't line up, he adapts fast and would be a genuinely valuable addition to your team. Email him whenever you'd like to take it further."
+        `Done — I've tailored Hari's CV to your${role} role, straight from his latest published CV.` +
+          (n && pct >= SHOW_MATCH_PCT_FROM
+            ? ` It's a ${pct} percent match — ${m} of the ${n} key requirements.`
+            : n
+            ? ` He brings ${m} of the ${n} key requirements you listed.`
+            : "") +
+          " You can download it just below — and email Hari whenever you'd like to take it further."
       );
     } catch {
       if (myTok !== tok.current) return;
@@ -581,10 +680,39 @@ export default function VirtualHari({
       {resumePdf && (
         <div className="vh-resume vh-resume-pinned">
           <div className="vh-resume-head">
-            <span>Hari's tailored resume</span>
+            <span>Hari's tailored CV{resumeSummary?.role ? ` · ${resumeSummary.role}` : ""}</span>
           </div>
+          {resumeSummary && (resumeSummary.total ?? 0) > 0 && (
+            <div className="vh-match">
+              <div className="vh-match-score">
+                {(resumeSummary.coverage ?? 0) >= SHOW_MATCH_PCT_FROM && (
+                  <span className="vh-match-pct">{resumeSummary.coverage}% match</span>
+                )}
+                <span>
+                  <b>{resumeSummary.matched?.length ?? 0}</b> of {resumeSummary.total} key requirements
+                  {(resumeSummary.related?.length ?? 0) > 0 &&
+                    ` (${resumeSummary.related!.length} through related experience)`}
+                </span>
+              </div>
+              <div className="vh-match-chips">
+                {resumeSummary.matched?.map((k) => {
+                  const rel = resumeSummary.related?.includes(k);
+                  return (
+                    <span
+                      key={k}
+                      className={"vh-match-chip" + (rel ? " rel" : "")}
+                      title={rel ? "related experience" : "direct match"}
+                    >
+                      {rel ? "≈" : "✓"} {k}
+                    </span>
+                  );
+                })}
+              </div>
+              {resumeSummary.fitNote && <p className="vh-match-note">{resumeSummary.fitNote}</p>}
+            </div>
+          )}
           <button className="vh-resume-dlbig" onClick={downloadResumePdf}>
-            ⬇ Download resume (PDF)
+            ⬇ Download tailored CV (PDF)
           </button>
         </div>
       )}

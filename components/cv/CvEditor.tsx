@@ -356,7 +356,11 @@ export default function CvEditor({
                   <Editable as="div" className="cvp-when" fk={`jobs.${i}.when`} value={j.when} onChange={(v) => update((x) => { x.jobs[i].when = v; })} placeholder="Mon YYYY – Present" />
                   <div>
                     <Editable as="h3" fk={`jobs.${i}.role`} value={j.role} onChange={(v) => update((x) => { x.jobs[i].role = v; })} placeholder="Role" />
-                    <Editable as="div" className="cvp-org" fk={`jobs.${i}.org`} value={j.org} onChange={(v) => update((x) => { x.jobs[i].org = v; })} placeholder="Company" />
+                    <div className="cvp-org cvp-orgrow">
+                      <Editable fk={`jobs.${i}.org`} value={j.org} onChange={(v) => update((x) => { x.jobs[i].org = v; })} placeholder="Company" />
+                      <span className="cvp-loc">·</span>
+                      <Editable className="cvp-loc" fk={`jobs.${i}.location`} value={j.location || ""} onChange={(v) => update((x) => { x.jobs[i].location = v; })} placeholder="City, Country" />
+                    </div>
                     <ul>
                       {j.bullets.map((b, k) => (
                         <li key={k}>

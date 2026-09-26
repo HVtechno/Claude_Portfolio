@@ -24,6 +24,7 @@ export const CV_SEED: CvData = {
       when: "Oct 2025 – Present",
       role: "Senior Data Engineer",
       org: "ING Netherlands",
+      location: "Amsterdam, Netherlands",
       bullets: [
         "Engineered Python-based ETL pipelines using XFBs, SFTP, Kafka and SQL for robust data processing.",
         "Automated data-analytics workflows, significantly reducing manual tasks and improving operational efficiency.",
@@ -36,6 +37,7 @@ export const CV_SEED: CvData = {
       when: "Jan 2025 – Sep 2025",
       role: "Senior Python Data Engineer",
       org: "Ebicus B.V.",
+      location: "Amsterdam, Netherlands",
       bullets: [
         "Crafted end-to-end data solutions on Azure with seamless integration and optimized workflows.",
         "Built reusable Python ETL scripts, boosting data-processing speed by 30% and cutting manual effort by 50%.",
@@ -47,6 +49,7 @@ export const CV_SEED: CvData = {
       when: "Jul 2024 – Dec 2024",
       role: "Senior Azure Data Engineer",
       org: "Dynamic People B.V.",
+      location: "Amsterdam, Netherlands",
       bullets: [
         "Optimized ingestion and transformation with Azure Synapse, Databricks and PySpark; integrated 10+ sources and improved Power BI refresh efficiency by 30%.",
         "Led a team of two junior engineers building and maintaining CI/CD pipelines in Azure DevOps for Synapse and Databricks.",
@@ -57,6 +60,7 @@ export const CV_SEED: CvData = {
       when: "Jul 2022 – Dec 2023",
       role: "Senior Azure Data Engineer",
       org: "Anheuser-Busch InBev",
+      location: "Prague, Czech Republic",
       bullets: [
         "Directed full-stack development with React, Node.js, Flask and SQL.",
         "Built and maintained Progressive Web Apps (PWAs) and REST APIs.",
@@ -69,6 +73,7 @@ export const CV_SEED: CvData = {
       when: "Aug 2019 – Jul 2022",
       role: "Senior BI Developer",
       org: "Anheuser-Busch InBev",
+      location: "Prague, Czech Republic",
       bullets: [
         "Translated business requirements into data-driven solutions.",
         "Built ETL pipelines with Python, VBScript, SAP GUI, Oracle, SharePoint, Databricks and Azure SQL.",
@@ -80,6 +85,7 @@ export const CV_SEED: CvData = {
       when: "May 2017 – Jun 2019",
       role: "Process Specialist",
       org: "Infosys BPO s.r.o.",
+      location: "Prague, Czech Republic",
       bullets: [
         "Led development of business documents with robust validation, improving data integrity by 30%.",
         "Streamlined client trade-message resolution in CSV and FpML, boosting processing efficiency by 30%.",
@@ -90,6 +96,7 @@ export const CV_SEED: CvData = {
       when: "Sep 2015 – Jan 2017",
       role: "Software Engineer",
       org: "ATOS",
+      location: "Chennai, India",
       bullets: [
         "Automated reconciliation using Excel macros and MS Access, increasing efficiency by 35%.",
         "Designed a web app in Python and JavaScript, improving trade-message processing efficiency by 30%.",
@@ -111,7 +118,7 @@ export const CV_SEED: CvData = {
     { name: "Azure Solutions Architect Expert", meta: "Microsoft · Aug 2025" },
     { name: "Azure Administrator Associate", meta: "Microsoft · Aug 2025" },
     { name: "Azure Security Engineer Associate", meta: "Microsoft · Aug 2024" },
-    { name: "Azure Data Engineer Associate (DP-203)", meta: "Microsoft · Jul 2023" },
+    { name: "Azure Data Engineer Associate", meta: "Microsoft · Jul 2023" },
     { name: "Azure Developer Associate", meta: "Microsoft · Feb 2023" },
     { name: "Azure Data Fundamentals", meta: "Microsoft · Jun 2022" },
   ],

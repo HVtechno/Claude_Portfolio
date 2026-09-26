@@ -41,7 +41,10 @@ export default function CvPaper({ data: raw }: { data: CvData }) {
               <div className="cvp-when">{j.when}</div>
               <div>
                 <h3>{j.role}</h3>
-                <div className="cvp-org">{j.org}</div>
+                <div className="cvp-org">
+                  {j.org}
+                  {j.location && <span className="cvp-loc"> · {j.location}</span>}
+                </div>
                 {j.bullets.length > 0 && (
                   <ul>
                     {j.bullets.map((b, k) => (

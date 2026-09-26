@@ -60,6 +60,7 @@ const s = StyleSheet.create({
   jobMain: { flex: 1 },
   role: { fontFamily: "Helvetica-Bold", fontSize: 11, color: INK },
   org: { fontFamily: "Helvetica-Bold", fontSize: 9.5, color: ACCENT, marginTop: 1, marginBottom: 3 },
+  loc: { fontFamily: "Helvetica", color: SUB },
   bullet: { flexDirection: "row", marginTop: 1.5 },
   bulletDot: { width: 10, fontSize: 9.8, color: ACCENT },
   bulletText: { flex: 1, fontSize: 9.6, lineHeight: 1.4, color: BODY },
@@ -78,7 +79,10 @@ const s = StyleSheet.create({
   },
   two: { flexDirection: "row", marginTop: 14 },
   col: { flex: 1, paddingRight: 14 },
+  colWide: { flex: 1.45, paddingRight: 14 },
   item: { marginBottom: 6 },
+  certRow: { marginBottom: 4 },
+  certMeta: { fontFamily: "Helvetica", fontSize: 8.8, color: SUB },
   itemName: { fontFamily: "Helvetica-Bold", fontSize: 9.8, color: INK },
   itemMeta: { fontSize: 8.8, color: SUB, marginTop: 1 },
 });
@@ -150,7 +154,12 @@ function CvDocument({ data: raw }: { data: CvData }) {
                 <View style={s.jobMain}>
                   <View minPresenceAhead={30}>
                     <Text style={s.role}>{j.role}</Text>
-                    {j.org ? <Text style={s.org}>{j.org}</Text> : null}
+                    {j.org ? (
+                      <Text style={s.org}>
+                        {j.org}
+                        {j.location ? <Text style={s.loc}>{`  ·  ${j.location}`}</Text> : null}
+                      </Text>
+                    ) : null}
                   </View>
                   {j.bullets.map((b, k) => (
                     <View key={k} style={s.bullet} wrap={false}>
@@ -184,12 +193,14 @@ function CvDocument({ data: raw }: { data: CvData }) {
         {(cv.certs.length > 0 || cv.education.length > 0) && (
           <View style={s.two}>
             {cv.certs.length > 0 && (
-              <View style={s.col}>
+              <View style={s.colWide}>
                 <Section title="Certifications" first>
                   {cv.certs.map((c, i) => (
-                    <View key={i} style={s.item} wrap={false}>
-                      <Text style={s.itemName}>{c.name}</Text>
-                      {c.meta ? <Text style={s.itemMeta}>{c.meta}</Text> : null}
+                    <View key={i} style={s.certRow} wrap={false}>
+                      <Text style={s.itemName}>
+                        {c.name}
+                        {c.meta ? <Text style={s.certMeta}>{`  ·  ${c.meta}`}</Text> : null}
+                      </Text>
                     </View>
                   ))}
                 </Section>

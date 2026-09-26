@@ -7,6 +7,8 @@ export interface CvJob {
   when: string;
   role: string;
   org: string;
+  /** optional, e.g. "Amsterdam, Netherlands" — shown next to the company */
+  location?: string;
   bullets: string[];
 }
 export interface CvGroup {
@@ -56,6 +58,7 @@ export function validateCv(input: unknown): CvData | null {
         when: str(j.when, 100),
         role: str(j.role, 200),
         org: str(j.org, 200),
+        location: str(j.location, 120),
         bullets: arr(j.bullets, 20, (b) => str(b, 1000)),
       };
     }),
@@ -107,7 +110,7 @@ export function cvToText(cv: CvData): string {
   if (cv.title) out.push(cv.title, "");
   out.push("PROFESSIONAL SUMMARY", cv.summary, "", "PROFESSIONAL EXPERIENCE", "");
   cv.jobs.forEach((j) => {
-    out.push(`${j.role} — ${j.org} (${j.when})`);
+    out.push(`${j.role} — ${j.org}${j.location ? `, ${j.location}` : ""} (${j.when})`);
     j.bullets.forEach((b) => out.push(`- ${b}`));
     out.push("");
   });
